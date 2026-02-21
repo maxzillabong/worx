@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,37 +25,13 @@ import { ThemeToggle } from "@/components/theme-toggle";
 
 // ─── Background ──────────────────────────────────────────────────────────────
 
-function HeroBackground({ videoUrl }: { videoUrl: string | null }) {
-  if (videoUrl) {
-    return (
-      <video
-        autoPlay loop muted playsInline
-        className="absolute inset-0 w-full h-full object-cover opacity-[0.08] dark:opacity-20 transition-opacity"
-        src={videoUrl}
-      />
-    );
-  }
+function HeroBackground() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
-      <motion.div
-        animate={{ x: [0, 50, 0], y: [0, -40, 0], scale: [1, 1.15, 1] }}
-        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -top-40 -left-20 w-[700px] h-[700px] rounded-full bg-teal-400/10 dark:bg-teal-400/8 blur-3xl"
-      />
-      <motion.div
-        animate={{ x: [0, -40, 0], y: [0, 50, 0], scale: [1, 0.85, 1] }}
-        transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 5 }}
-        className="absolute top-1/2 -right-32 w-[600px] h-[600px] rounded-full bg-cyan-400/8 dark:bg-cyan-400/6 blur-3xl"
-      />
-      {/* Light dot grid */}
-      <div
-        className="absolute inset-0 opacity-30 dark:opacity-10"
-        style={{
-          backgroundImage: "radial-gradient(circle, #94a3b8 1px, transparent 1px)",
-          backgroundSize: "28px 28px",
-        }}
-      />
-    </div>
+    <video
+      autoPlay loop muted playsInline
+      className="absolute inset-0 w-full h-full object-cover opacity-[0.08] dark:opacity-20 transition-opacity"
+      src="/hero.mp4"
+    />
   );
 }
 
@@ -249,52 +225,6 @@ function FeatureCard({ icon, title, description, bullets }: {
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function Home() {
-  const [videoUrl, setVideoUrl] = useState<string | null>(null);
-  const taskIdRef = useRef<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    let pollInterval: ReturnType<typeof setInterval> | null = null;
-
-    async function init() {
-      try {
-        // 1. Check if we already have a cached video URL (fast path)
-        const cached = await fetch("/api/hero-video");
-        const cachedData = await cached.json() as { videoUrl: string | null };
-        if (cachedData.videoUrl) {
-          if (!cancelled) setVideoUrl(cachedData.videoUrl);
-          return; // Done — no need to regenerate
-        }
-
-        // 2. No cache — kick off a new generation
-        const res = await fetch("/api/generate-hero-video", { method: "POST" });
-        const data = await res.json() as { taskId?: string };
-        if (cancelled || !data.taskId) return;
-        taskIdRef.current = data.taskId;
-
-        pollInterval = setInterval(async () => {
-          if (cancelled) return;
-          const poll = await fetch(`/api/generate-hero-video?taskId=${data.taskId}`);
-          const result = await poll.json() as { status: string; videoUrl?: string };
-          if (result.status === "complete" && result.videoUrl) {
-            if (!cancelled) setVideoUrl(result.videoUrl);
-            if (pollInterval) clearInterval(pollInterval);
-          } else if (result.status === "failed") {
-            if (pollInterval) clearInterval(pollInterval);
-          }
-        }, 8000);
-      } catch {
-        // Silently fail — hero works without video
-      }
-    }
-
-    void init();
-    return () => {
-      cancelled = true;
-      if (pollInterval) clearInterval(pollInterval);
-    };
-  }, []);
-
   return (
     <main className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors">
 
@@ -316,7 +246,7 @@ export default function Home() {
 
       {/* ── Hero ── */}
       <section className="relative overflow-hidden bg-white dark:bg-slate-950">
-        <HeroBackground videoUrl={videoUrl} />
+        <HeroBackground />
         <div className="relative z-10 container mx-auto px-6 pt-24 pb-20 max-w-6xl">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             {/* Left */}

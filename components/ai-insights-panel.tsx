@@ -1,25 +1,16 @@
 /**
  * AI Insights Panel Component
- * 
- * EMPTY STATE - Ready for Claude Code 4.6 autonomous development
- * 
- * This component displays AI-generated insights from bloodwork analysis.
- * Currently shows an empty state. The AI integration feature will be built
- * autonomously by Claude Code as part of the testing process.
- * 
- * Expected implementation:
- * - POST /api/analyze endpoint to generate insights
- * - Real-time streaming of AI analysis
- * - Display insights with categorization (warnings, recommendations, trends)
- * - Zustand state integration for insights storage
- * - Loading states and error handling
+ *
+ * Displays AI-generated insights from bloodwork analysis.
+ * Currently shows empty/coming-soon state; ready for Phase 2 implementation.
+ * Light/dark theme aware.
  */
 
 'use client';
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Brain, Sparkles, Lock } from 'lucide-react';
+import { Sparkles, Lock, Loader2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useWorxStore } from '@/lib/store';
@@ -31,116 +22,98 @@ interface AIInsightsPanelProps {
 
 export function AIInsightsPanel({ bloodwork }: AIInsightsPanelProps): React.JSX.Element {
   const isAnalyzing = useWorxStore((state) => state.isAnalyzing);
-  const insights = useWorxStore((state) => 
-    state.getInsightsByBloodworkId(bloodwork.id)
+  const allInsights = useWorxStore((state) => state.insights);
+  const insights = React.useMemo(
+    () => allInsights.filter((i) => i.bloodworkId === bloodwork.id),
+    [allInsights, bloodwork.id]
   );
 
-  // TODO: This will be implemented by Claude Code 4.6
   const handleAnalyze = async () => {
     console.log('Analysis requested for bloodwork:', bloodwork.id);
-    // Future implementation:
-    // 1. Call POST /api/analyze
-    // 2. Stream AI insights in real-time
-    // 3. Store in Zustand state
-    // 4. Display formatted results
   };
 
-  // Empty state - no insights generated yet
   if (insights.length === 0 && !isAnalyzing) {
     return (
-      <Card className="p-8 bg-gradient-to-br from-purple-500/10 via-slate-900/50 to-slate-900/50 border-purple-500/20">
+      <Card className="p-6 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-none">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="text-center"
         >
-          {/* Icon */}
-          <div className="relative inline-block mb-6">
-            <div className="absolute inset-0 bg-purple-500/20 blur-2xl rounded-full" />
-            <div className="relative bg-purple-500/10 border border-purple-500/30 rounded-full p-6">
-              <Brain className="w-12 h-12 text-purple-400" />
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-9 h-9 rounded-lg bg-teal-50 dark:bg-teal-950/60 border border-teal-200 dark:border-teal-900/60 flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-teal-500 dark:text-teal-400" />
+            </div>
+            <div>
+              <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-200">AI Blood Analysis</h2>
+              <p className="text-xs text-slate-400">Powered by Claude</p>
             </div>
           </div>
 
-          {/* Title */}
-          <h2 className="text-2xl font-bold text-white mb-2">
-            AI Blood Analysis
-          </h2>
-          <p className="text-slate-400 mb-6 max-w-md mx-auto">
-            Get personalized insights, trend analysis, and health recommendations 
-            powered by advanced AI models.
+          <p className="text-xs text-slate-500 leading-relaxed mb-5">
+            Get personalized insights, trend analysis, and health recommendations
+            from your bloodwork results.
           </p>
 
-          {/* Feature List */}
-          <div className="grid gap-3 mb-8 max-w-sm mx-auto">
-            <div className="flex items-center gap-3 text-sm text-slate-300">
-              <Sparkles className="w-4 h-4 text-purple-400 shrink-0" />
-              <span>Analyze patterns across all metrics</span>
-            </div>
-            <div className="flex items-center gap-3 text-sm text-slate-300">
-              <Sparkles className="w-4 h-4 text-purple-400 shrink-0" />
-              <span>Identify correlations and trends</span>
-            </div>
-            <div className="flex items-center gap-3 text-sm text-slate-300">
-              <Sparkles className="w-4 h-4 text-purple-400 shrink-0" />
-              <span>Personalized health recommendations</span>
-            </div>
-          </div>
+          <ul className="space-y-2 mb-6">
+            {[
+              'Analyze patterns across all metrics',
+              'Identify correlations and trends',
+              'Personalized health recommendations',
+            ].map((feat) => (
+              <li key={feat} className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                <div className="w-1 h-1 rounded-full bg-teal-500 shrink-0" />
+                {feat}
+              </li>
+            ))}
+          </ul>
 
-          {/* CTA Button */}
           <Button
             onClick={handleAnalyze}
-            size="lg"
-            className="bg-purple-600 hover:bg-purple-700 text-white gap-2"
+            size="sm"
+            className="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-300 border border-slate-200 dark:border-slate-700 gap-2 cursor-not-allowed shadow-none"
             disabled
           >
-            <Lock className="w-4 h-4" />
-            Generate AI Insights
-            <span className="text-xs opacity-75">(Coming Soon)</span>
+            <Lock className="w-3.5 h-3.5" />
+            Generate Insights
+            <span className="text-xs text-slate-400 ml-auto">Coming Soon</span>
           </Button>
 
-          {/* Attribution */}
-          <p className="mt-6 text-xs text-slate-500">
-            This feature will be built by Claude Code 4.6 autonomously
+          <p className="mt-4 text-[11px] text-slate-400 text-center">
+            Being built by Claude Code 4.6 autonomously
           </p>
         </motion.div>
       </Card>
     );
   }
 
-  // Loading state
   if (isAnalyzing) {
     return (
-      <Card className="p-8 bg-slate-900/50 border-purple-500/20">
-        <div className="text-center">
+      <Card className="p-6 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-none">
+        <div className="flex flex-col items-center text-center py-4">
           <motion.div
             animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-            className="inline-block mb-4"
+            transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+            className="mb-4"
           >
-            <Brain className="w-12 h-12 text-purple-400" />
+            <Loader2 className="w-8 h-8 text-teal-500 dark:text-teal-400" />
           </motion.div>
-          <p className="text-slate-300">Analyzing bloodwork...</p>
+          <p className="text-sm text-slate-700 dark:text-slate-300 font-medium mb-1">Analyzing bloodwork</p>
+          <p className="text-xs text-slate-400">This may take a moment...</p>
         </div>
       </Card>
     );
   }
 
-  // Results state - will be implemented by Claude Code
   return (
-    <Card className="p-6 bg-slate-900/50 border-purple-500/20">
+    <Card className="p-6 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-none">
       <div className="flex items-center gap-3 mb-4">
-        <Brain className="w-6 h-6 text-purple-400" />
-        <h2 className="text-xl font-bold text-white">AI Insights</h2>
-        <span className="ml-auto text-sm text-slate-400">
-          {insights.length} insights found
-        </span>
+        <Sparkles className="w-4 h-4 text-teal-500 dark:text-teal-400" />
+        <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-200">AI Insights</h2>
+        <span className="ml-auto text-xs text-slate-400">{insights.length} found</span>
       </div>
-      
-      {/* TODO: Render insights here */}
-      <div className="text-sm text-slate-400">
-        Insights display component to be implemented by Claude Code 4.6
+      <div className="text-xs text-slate-400">
+        Insights display to be implemented in Phase 2.
       </div>
     </Card>
   );

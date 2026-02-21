@@ -1,11 +1,14 @@
-import type { Metadata } from 'next';
+import type React from "react";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'Dashboard — Worx Blood Analysis',
-  description: 'View your bloodwork results with AI-powered insights, trend analysis, and health recommendations.',
+  title: "Blood Analysis Report",
+  description:
+    "View your AI-powered blood analysis results with detailed metric breakdowns and health insights.",
   openGraph: {
-    title: 'Dashboard — Worx Blood Analysis',
-    description: 'View your bloodwork results with AI-powered insights and recommendations.',
+    title: "Blood Analysis Report | Worx",
+    description:
+      "View your AI-powered blood analysis results with detailed metric breakdowns and health insights.",
   },
 };
 

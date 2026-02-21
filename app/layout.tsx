@@ -14,19 +14,27 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Worx — AI-Powered Blood Analysis",
-  description: "Understand your bloodwork instantly. AI-powered insights from your lab results.",
+  metadataBase: new URL("https://worx.maxzilla.nl"),
+  title: {
+    default: "Worx — AI-Powered Blood Analysis",
+    template: "%s | Worx",
+  },
+  description:
+    "Understand your bloodwork instantly. AI-powered insights from your lab results.",
   openGraph: {
     title: "Worx — AI-Powered Blood Analysis",
-    description: "Understand your bloodwork instantly. AI-powered insights from your lab results.",
-    type: "website",
-    siteName: "Worx",
+    description:
+      "Understand your bloodwork instantly. AI-powered insights from your lab results.",
     url: "https://worx.maxzilla.nl",
+    siteName: "Worx",
+    type: "website",
+    locale: "en_US",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Worx — AI-Powered Blood Analysis",
-    description: "Understand your bloodwork instantly. AI-powered insights from your lab results.",
+    description:
+      "Understand your bloodwork instantly. AI-powered insights from your lab results.",
   },
 };
 

@@ -1,11 +1,14 @@
-import type { Metadata } from 'next';
+import type React from "react";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'How It Was Made — Worx',
-  description: 'Learn how Worx was built autonomously by Claude Code 4.6 as a test of AI-assisted development.',
+  title: "How Worx Was Made",
+  description:
+    "Learn how Worx was built 100% autonomously by Claude Code 4.6 with zero human code.",
   openGraph: {
-    title: 'How It Was Made — Worx',
-    description: 'Built autonomously by Claude Code 4.6 as a test of AI-assisted development.',
+    title: "How Worx Was Made | Worx",
+    description:
+      "Learn how Worx was built 100% autonomously by Claude Code 4.6 with zero human code.",
   },
 };
 

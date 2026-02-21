@@ -1,23 +1,25 @@
-import type { MetadataRoute } from 'next';
+import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = "https://worx.maxzilla.nl";
+
   return [
     {
-      url: 'https://worx.maxzilla.nl',
+      url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: "weekly",
       priority: 1,
     },
     {
-      url: 'https://worx.maxzilla.nl/dashboard',
+      url: `${baseUrl}/dashboard`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: "weekly",
       priority: 0.8,
     },
     {
-      url: 'https://worx.maxzilla.nl/how-it-was-made',
+      url: `${baseUrl}/how-it-was-made`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: "monthly",
       priority: 0.5,
     },
   ];

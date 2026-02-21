@@ -115,6 +115,88 @@ Before considering a PR complete:
 5. **State:** Zustand integration (no prop drilling)
 6. **Errors:** Centralized error handling
 7. **Security:** No secrets exposed, inputs sanitized
+8. **Pre-Push Agents:** All three agents below must pass (see "Pre-Push Agent Gates")
+
+## Pre-Push Agent Gates (MANDATORY)
+
+**Before every `git push`, you MUST launch all three agents in parallel using the Task tool. No exceptions. Do not push until all three pass.**
+
+These agents run as parallel subagents. Launch all three simultaneously, wait for all results, and only push if every agent passes clean.
+
+### 1. SEO Audit Agent
+- **Subagent type:** `general-purpose`
+- **Scope:** Audit all pages in `app/` for SEO best practices
+- **Checks:**
+  - Every page/layout exports proper `metadata` (title, description, openGraph)
+  - Semantic HTML structure (single `<h1>` per page, logical heading hierarchy)
+  - Images have `alt` attributes
+  - No missing `<meta>` viewport or charset tags
+  - Proper use of Next.js `generateMetadata` where dynamic
+  - `robots.txt` and `sitemap.xml` exist if applicable
+- **Output:** List of findings with severity (pass/warn/fail)
+- **Gate:** No "fail" findings allowed. Warnings are acceptable but should be noted.
+
+### 2. Code Review Agent
+- **Subagent type:** `general-purpose`
+- **Scope:** Review all changed files (use `git diff` against base branch)
+- **Checks:**
+  - No `any` types, no `@ts-ignore`, no `eslint-disable` without justification
+  - Functions have explicit return types
+  - No unused imports, variables, or dead code
+  - No hardcoded secrets, API keys, or credentials
+  - Zod validation at all API boundaries
+  - Error handling follows `lib/api-error.ts` patterns
+  - No prop drilling (state via Zustand)
+  - No code duplication (DRY principle)
+  - Component/function naming follows project conventions
+  - Test coverage exists for new code paths
+- **Output:** Inline-style review comments with file:line references
+- **Gate:** No critical findings allowed. Suggestions are acceptable.
+
+### 3. Security Audit Agent
+- **Subagent type:** `general-purpose`
+- **Scope:** Scan the full codebase for security vulnerabilities
+- **Checks:**
+  - OWASP Top 10 (XSS, injection, CSRF, SSRF, etc.)
+  - No secrets or API keys in source code or git history
+  - All user inputs sanitized via Zod before use
+  - API routes validate authentication/authorization where needed
+  - No `eval()`, `dangerouslySetInnerHTML`, or unsafe DOM manipulation
+  - Dependencies checked for known vulnerabilities (`npm audit`)
+  - HTTP security headers configured in `next.config.ts`
+  - Environment variables not leaked to client bundles
+  - No sensitive data in error responses (production mode)
+- **Output:** Vulnerability report with severity (info/low/medium/high/critical)
+- **Gate:** No "high" or "critical" findings allowed. Medium findings require justification.
+
+### Pre-Push Workflow
+
+```
+1. Finish implementation
+2. Run `npm test` → all passing
+3. Run `npm run build` → clean
+4. Launch all 3 agents in parallel (Task tool):
+   a. SEO Audit Agent
+   b. Code Review Agent
+   c. Security Audit Agent
+5. Review agent outputs
+6. Fix any blocking findings
+7. Re-run failed agents if fixes were made
+8. Only after all 3 pass → `git push`
+```
+
+### Agent Launch Template
+
+When launching, use prompts like:
+
+**SEO Agent:**
+> "Audit all pages in app/ for SEO. Check metadata exports, semantic HTML, heading hierarchy, image alt tags, and Next.js metadata patterns. Report findings as pass/warn/fail with file:line references."
+
+**Code Review Agent:**
+> "Review all files changed vs the main branch (git diff main...HEAD). Check for type safety, unused code, validation patterns, error handling, naming conventions, and test coverage. Report as inline review comments with file:line references."
+
+**Security Agent:**
+> "Perform a security audit of the full codebase. Check OWASP Top 10, secrets in code, input sanitization, unsafe APIs (eval, dangerouslySetInnerHTML), dependency vulnerabilities (npm audit), security headers, and client bundle leaks. Report findings with severity levels."
 
 ## Key Architectural Principles
 
@@ -220,6 +302,7 @@ This project will be featured in a blog post:
 - Duplicate code
 - Bypass error handling
 - Commit without testing
+- Push without running all 3 pre-push agents (SEO, Code Review, Security)
 
 ## Workflow
 
@@ -227,8 +310,12 @@ This project will be featured in a blog post:
 2. Check PROGRESS.md for current state
 3. Implement following rules.md
 4. Write tests
-5. Update PROGRESS.md
-6. Commit with descriptive message
+5. Run `npm test` and `npm run build`
+6. **Run Pre-Push Agent Gates (SEO + Code Review + Security) in parallel**
+7. Fix any findings, re-run agents if needed
+8. Update PROGRESS.md
+9. Commit with descriptive message
+10. Push only after all agents pass
 
 ## When Stuck
 

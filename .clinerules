@@ -1,0 +1,43 @@
+# Cline/Cursor Rules for Worx
+
+Read these files in order before starting:
+1. PRD.md - Product requirements
+2. rules.md - Coding standards
+3. PROGRESS.md - Current status
+4. claude.md - Workflow guide
+
+## Quick Rules
+
+### Type Safety
+- No `any` types
+- Explicit return types on exports
+- Infer types from Zod: `type T = z.infer<typeof Schema>`
+
+### Validation
+- All API inputs: Validate with Zod schemas
+- Import from: `@/lib/validation`
+- Example: `const data = RequestSchema.parse(body)`
+
+### State Management
+- Global state: Use Zustand (`@/lib/store`)
+- UI state: Use Zustand selectors
+- Never: useState for global data (causes prop drilling)
+
+### Error Handling
+- Use: `createErrorResponse()` and `handleApiError()`
+- Import from: `@/lib/api-error`
+- Never: Manual `new Response()` for errors
+
+### Testing
+- Required for all new features
+- Location: `lib/__tests__/`
+- Run: `npm test`
+- Coverage: Aim for 80%+
+
+### Before Committing
+- [ ] `npm test` passes
+- [ ] `npm run build` succeeds
+- [ ] No TypeScript errors
+- [ ] PROGRESS.md updated
+
+See rules.md for complete standards.

@@ -17,21 +17,57 @@ Before doing anything, read these files in order:
 
 **Phase 2: AI Insights Feature** (Autonomous Development Test)
 
-Build the AI blood analysis feature as specified in PRD.md. This will test your complete autonomous pipeline:
+**STATUS: READY TO START**
 
-1. **Write** - Implement feature per PRD specs
-2. **Review** - Auto code review with inline comments
+Build the complete AI blood analysis feature autonomously. This tests your end-to-end pipeline from code generation to auto-merge.
+
+### Your Autonomous Pipeline
+1. **Write** - Implement feature per PRD.md specifications
+2. **Review** - Auto code review with inline comments  
 3. **Security** - Automated vulnerability scan
-4. **Test** - Write tests, ensure coverage
+4. **Test** - Write comprehensive tests (target: 80%+ coverage)
 5. **Merge** - Auto-merge when all checks pass
 
-**Expected Implementation:**
-- `POST /api/analyze` endpoint
-- AI model integration (Anthropic/OpenAI)
-- Insight parsing and structuring
-- UI component completion (AIInsightsPanel)
-- Zustand state integration
-- Comprehensive tests
+### What You Need to Build
+
+**Backend (`app/api/analyze/route.ts`):**
+- Replace stub with working `POST /api/analyze` endpoint
+- Add AI model integration (recommend: Anthropic Claude Sonnet 4)
+- Parse bloodwork metrics and generate structured insights
+- Return validated AIInsight response
+- Handle errors with existing error utilities
+
+**Frontend (`components/ai-insights-panel.tsx`):**
+- Remove "Coming Soon" placeholder
+- Add "Generate Insights" button with onClick handler
+- Implement loading states (use Zustand `isAnalyzing`)
+- Display insights in categorized list
+- Color-code by severity (info/low/medium/high)
+- Show error states gracefully
+
+**State Integration:**
+- Use existing Zustand store (`lib/store.ts`)
+- Store insights with `addInsight()`
+- Retrieve with `getInsightsByBloodworkId()`
+
+**Testing:**
+- Write tests for API endpoint (validation, errors, response structure)
+- Write tests for AI parsing logic
+- Write tests for UI component (loading, error, display states)
+- All existing tests must still pass (66/66)
+
+### Environment Setup Needed
+Add to `.env.local`:
+```
+ANTHROPIC_API_KEY=your_key_here
+```
+
+### Success Criteria
+- All tests passing (target: 80+ total)
+- TypeScript strict mode clean
+- Build successful
+- Feature works end-to-end
+- Auto-merge completes
 
 ## Project Structure
 

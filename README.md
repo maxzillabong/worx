@@ -174,11 +174,36 @@ All code must follow the standards defined in [`CLAUDE.md`](./CLAUDE.md):
 - Zustand for global state
 - Centralized error handling
 - Security headers enabled
+- Comprehensive test coverage
+
+### Testing
+
+```bash
+# Run all tests
+npm test
+
+# Watch mode for development
+npm run test:watch
+
+# Interactive UI
+npm run test:ui
+
+# Coverage report
+npm run test:coverage
+```
+
+**Test Suite:**
+- 66 tests across 4 test files
+- Utilities: Pure function testing
+- Validation: Zod schema verification
+- State: Zustand store behavior
+- Errors: API error handling
 
 ### Testing Checklist
 
 Before committing:
 
+- [ ] All tests pass: `npm test`
 - [ ] TypeScript build passes: `npm run build`
 - [ ] No type errors or warnings
 - [ ] All API inputs validated with Zod

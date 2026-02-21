@@ -138,13 +138,49 @@ if (!bloodwork) {
 
 Before opening a PR, verify:
 
+- [ ] **Tests:** All tests pass: `npm test`
 - [ ] **Types:** No `any` types, explicit return types on exports
 - [ ] **Validation:** All API inputs validated with Zod
 - [ ] **State:** Using Zustand store, not local useState for global data
 - [ ] **Errors:** Using `createErrorResponse()` and `handleApiError()`
 - [ ] **Security:** No secrets exposed, inputs sanitized
 - [ ] **Build:** `npm run build` passes without errors
-- [ ] **Lint:** `npm run lint` passes (if configured)
+- [ ] **Coverage:** Critical paths have test coverage
+
+### Running Tests
+
+```bash
+# Run all tests once
+npm test
+
+# Watch mode for development
+npm run test:watch
+
+# Visual UI for tests
+npm run test:ui
+
+# Generate coverage report
+npm run test:coverage
+```
+
+### Writing Tests
+
+Tests use Vitest + Testing Library. Place tests in `__tests__` folders:
+
+```typescript
+import { describe, it, expect } from 'vitest';
+
+describe('MyFunction', () => {
+  it('handles valid input', () => {
+    const result = myFunction('valid');
+    expect(result).toBe('expected');
+  });
+
+  it('rejects invalid input', () => {
+    expect(() => myFunction('invalid')).toThrow();
+  });
+});
+```
 
 ---
 

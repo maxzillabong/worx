@@ -1,97 +1,85 @@
 /**
- * POST /api/analyze
- * 
- * Generate AI-powered insights from bloodwork results
- * 
- * STUB IMPLEMENTATION - To be completed by Claude Code 4.6
- * 
- * This endpoint will:
- * 1. Accept a bloodwork ID
- * 2. Fetch bloodwork data (currently from Zustand, later from DB)
- * 3. Send metrics to AI model (Claude/GPT) for analysis
- * 4. Parse and structure AI response into insights
- * 5. Store insights in Zustand state
- * 6. Return structured insights to client
- * 
- * Expected AI analysis should include:
- * - Health warnings for critical/abnormal values
- * - Trend analysis across metrics
- * - Correlation detection (e.g., glucose + cholesterol)
- * - Personalized recommendations
- * - Severity classification
+ * POST /api/analyze - Generate AI-powered insights from bloodwork results
+ * GET  /api/analyze - Retrieve previously generated insights
+ *
+ * Uses Anthropic Claude to analyze bloodwork metrics and return
+ * structured health insights with severity classifications.
  */
 
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
 import { handleApiError, Errors } from '@/lib/api-error';
-import { AnalyzeBloodworkRequestSchema } from '@/lib/validation';
+import {
+  AnalyzeBloodworkRequestSchema,
+  MOCK_BLOODWORK,
+  type AIInsight,
+} from '@/lib/validation';
+import { analyzeBloodwork } from '@/lib/ai-analysis';
+
+// In-memory insight store (until database is added in Phase 3)
+const insightStore = new Map<string, AIInsight>();
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
-    // 1. Parse and validate request body
-    const body = await request.json();
+    const body: unknown = await request.json();
     const data = AnalyzeBloodworkRequestSchema.parse(body);
 
-    // 2. TODO: Fetch bloodwork from database/store
-    // const bloodwork = await db.bloodwork.findUnique({ where: { id: data.bloodworkId } });
-    // if (!bloodwork) throw Errors.NotFound('Bloodwork');
+    // Fetch bloodwork — currently using mock data for demo
+    const bloodwork =
+      data.bloodworkId === MOCK_BLOODWORK.id ? MOCK_BLOODWORK : undefined;
 
-    // 3. TODO: Call AI model for analysis
-    // const aiResponse = await anthropic.messages.create({
-    //   model: 'claude-sonnet-4',
-    //   messages: [{
-    //     role: 'user',
-    //     content: `Analyze these bloodwork results: ${JSON.stringify(bloodwork.metrics)}`
-    //   }]
-    // });
+    if (!bloodwork) {
+      throw Errors.NotFound('Bloodwork');
+    }
 
-    // 4. TODO: Parse AI response into structured insights
-    // const insights = parseAIResponse(aiResponse);
+    // Call AI model for analysis
+    const { insights, summary, model } = await analyzeBloodwork(bloodwork);
 
-    // 5. TODO: Store insights
-    // await db.insights.create({ data: insights });
+    // Build validated insight object
+    const aiInsight: AIInsight = {
+      id: crypto.randomUUID(),
+      bloodworkId: data.bloodworkId,
+      generatedAt: new Date().toISOString(),
+      insights,
+      summary,
+      model,
+    };
 
-    // 6. Placeholder response
+    // Persist in memory store
+    insightStore.set(aiInsight.id, aiInsight);
+
     return NextResponse.json({
-      success: false,
-      error: {
-        code: 'NOT_IMPLEMENTED',
-        message: 'AI analysis feature not yet implemented. This will be built by Claude Code 4.6.',
-      },
-    }, { status: 501 });
-
+      success: true,
+      data: aiInsight,
+    });
   } catch (error) {
     return handleApiError(error);
   }
 }
 
-/**
- * GET /api/analyze?bloodworkId=<uuid>
- * 
- * Retrieve previously generated insights for a bloodwork result
- */
 export async function GET(request: Request): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url);
-    const bloodworkId = searchParams.get('bloodworkId');
+    const rawId = searchParams.get('bloodworkId');
 
-    if (!bloodworkId) {
+    if (!rawId) {
       throw Errors.BadRequest('bloodworkId query parameter is required');
     }
 
-    // TODO: Fetch insights from database
-    // const insights = await db.insights.findMany({
-    //   where: { bloodworkId }
-    // });
+    const bloodworkId = z.string().uuid().parse(rawId);
 
-    // Placeholder response
+    // Find insights for this bloodwork ID
+    const results: AIInsight[] = [];
+    for (const insight of insightStore.values()) {
+      if (insight.bloodworkId === bloodworkId) {
+        results.push(insight);
+      }
+    }
+
     return NextResponse.json({
-      success: false,
-      error: {
-        code: 'NOT_IMPLEMENTED',
-        message: 'Insights retrieval not yet implemented.',
-      },
-    }, { status: 501 });
-
+      success: true,
+      data: results,
+    });
   } catch (error) {
     return handleApiError(error);
   }

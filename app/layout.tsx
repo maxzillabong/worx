@@ -16,6 +16,18 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Worx — AI-Powered Blood Analysis",
   description: "Understand your bloodwork instantly. AI-powered insights from your lab results.",
+  openGraph: {
+    title: "Worx — AI-Powered Blood Analysis",
+    description: "Understand your bloodwork instantly. AI-powered insights from your lab results.",
+    type: "website",
+    siteName: "Worx",
+    url: "https://worx.maxzilla.nl",
+  },
+  twitter: {
+    card: "summary",
+    title: "Worx — AI-Powered Blood Analysis",
+    description: "Understand your bloodwork instantly. AI-powered insights from your lab results.",
+  },
 };
 
 // Inline script to apply saved theme before paint — prevents flash

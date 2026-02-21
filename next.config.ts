@@ -6,11 +6,6 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false,
   },
 
-  // ESLint strict mode
-  eslint: {
-    ignoreDuringBuilds: false,
-  },
-
   // Security headers
   async headers() {
     return [

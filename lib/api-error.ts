@@ -58,7 +58,7 @@ export function handleApiError(error: unknown): NextResponse {
       400,
       'VALIDATION_ERROR',
       'Invalid request data',
-      error.errors
+      error.issues
     );
   }
 

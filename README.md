@@ -16,6 +16,18 @@ Worx is a production-grade demonstration of AI-assisted healthcare analytics. Th
 - **Security-first** design with proper validation and headers
 - **Production-ready** code structure and patterns
 
+## 📚 Documentation
+
+This project follows a structured documentation approach:
+
+- **[PRD.md](./PRD.md)** - Product Requirements Document (features, specs, data models)
+- **[claude.md](./claude.md)** - Claude interaction guide (workflow, mission, constraints)
+- **[rules.md](./rules.md)** - Coding standards and architecture rules (MUST READ before coding)
+- **[PROGRESS.md](./PROGRESS.md)** - Real-time progress tracker (updated after every change)
+- **[.clinerules](./.clinerules)** - Quick reference for Cursor/Cline tools
+
+**Read in order:** PRD.md → rules.md → PROGRESS.md → claude.md
+
 ## Architecture
 
 ### Tech Stack

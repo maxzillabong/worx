@@ -66,7 +66,6 @@ describe('handleApiError', () => {
       {
         code: 'invalid_type',
         expected: 'string',
-        received: 'number',
         path: ['name'],
         message: 'Expected string, received number',
       },

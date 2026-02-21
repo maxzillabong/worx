@@ -44,7 +44,7 @@ Worx is an AI-powered blood analysis platform designed to demonstrate production
 - Smooth animations with Framer Motion
 
 **Architecture**
-- Next.js 15 with App Router
+- Next.js 16 with App Router
 - TypeScript strict mode
 - Zod validation schemas
 - Zustand state management

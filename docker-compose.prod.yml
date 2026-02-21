@@ -1,0 +1,14 @@
+services:
+  worx-web:
+    image: ghcr.io/maxzillabong/worx:latest
+    ports:
+      - "127.0.0.1:3020:3000"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - worx-net
+    restart: unless-stopped
+
+networks:
+  worx-net:
+    external: true

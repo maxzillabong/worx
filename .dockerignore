@@ -1,0 +1,11 @@
+node_modules
+.next
+.git
+.github
+.claude
+*.md
+!README.md
+.env*
+.vscode
+vitest.config.ts
+lib/__tests__

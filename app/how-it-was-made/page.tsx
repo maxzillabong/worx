@@ -146,7 +146,7 @@ function Step({ number, title, description }: { number: number; title: string; d
         {number}
       </div>
       <div>
-        <h4 className="text-purple-200 font-semibold mb-1">{title}</h4>
+        <h2 className="text-purple-200 font-semibold mb-1">{title}</h2>
         <p className="text-slate-400 text-sm">{description}</p>
       </div>
     </div>
@@ -158,7 +158,7 @@ function Result({ icon, title, items }: { icon: React.ReactNode; title: string; 
     <div>
       <div className="flex items-center gap-2 mb-3">
         {icon}
-        <h4 className="text-purple-200 font-semibold">{title}</h4>
+        <h2 className="text-purple-200 font-semibold">{title}</h2>
       </div>
       <ul className="space-y-2 ml-7">
         {items.map((item, i) => (

@@ -1,5 +1,6 @@
 "use client";
 
+import type React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
@@ -200,8 +201,8 @@ function Result({ icon, title, accent, items }: { icon: React.ReactNode; title: 
         <h2 className="text-slate-800 dark:text-slate-200 font-semibold text-sm">{title}</h2>
       </div>
       <ul className="space-y-1.5 ml-6">
-        {items.map((item, i) => (
-          <li key={i} className="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-2">
+        {items.map((item) => (
+          <li key={item} className="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-2">
             <span className={`w-1 h-1 rounded-full flex-shrink-0 ${accent === "teal" ? "bg-teal-400" : "bg-cyan-400"}`} />
             {item}
           </li>

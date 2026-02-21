@@ -181,7 +181,7 @@ export default function DashboardPage(): React.JSX.Element {
           transition={{ delay: 0.8 }}
           className="mt-16 text-center text-xs text-slate-400"
         >
-          Built with Next.js 15 · TypeScript · Zod · Zustand · Framer Motion
+          Built with Next.js 16 · TypeScript · Zod · Zustand · Framer Motion
         </motion.div>
       </div>
     </div>

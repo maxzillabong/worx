@@ -96,7 +96,7 @@ worx/
 
 ## Tech Stack Quick Reference
 
-- **Framework:** Next.js 15 (App Router)
+- **Framework:** Next.js 16 (App Router)
 - **Language:** TypeScript (strict mode)
 - **Validation:** Zod (runtime type checking)
 - **State:** Zustand (global state management)

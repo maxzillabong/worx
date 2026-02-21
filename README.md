@@ -34,7 +34,7 @@ This project follows a structured documentation approach:
 
 | Layer | Technology | Purpose |
 |-------|------------|---------|
-| **Framework** | Next.js 15 | React framework with App Router |
+| **Framework** | Next.js 16 | React framework with App Router |
 | **Language** | TypeScript | Type safety and developer experience |
 | **Validation** | Zod | Runtime type validation |
 | **State** | Zustand | Global state management |

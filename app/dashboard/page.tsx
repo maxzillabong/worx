@@ -1,25 +1,24 @@
 /**
  * Dashboard Page
- * 
+ *
  * Main dashboard displaying patient bloodwork results with AI-powered insights.
- * Demonstrates production-grade architecture:
- * - Zustand for global state management
- * - Zod-validated data types
- * - Responsive grid layout
- * - Smooth animations with Framer Motion
- * - Component composition patterns
+ * Light/dark theme aware — uses Tailwind dark: variants.
  */
 
 'use client';
 
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { User, Calendar, Activity, TrendingUp, AlertCircle } from 'lucide-react';
+import { User, Calendar, Activity, TrendingUp, AlertCircle, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { MetricCard } from '@/components/metric-card';
 import { AIInsightsPanel } from '@/components/ai-insights-panel';
+import { WorkxLogo } from '@/components/worx-logo';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { useWorxStore } from '@/lib/store';
 import { MOCK_PATIENT, MOCK_BLOODWORK } from '@/lib/validation';
 import { formatDate, groupMetricsByCategory, calculateSummaryStats } from '@/lib/utils';
@@ -30,183 +29,115 @@ export default function DashboardPage(): React.JSX.Element {
   const setCurrentPatient = useWorxStore((state) => state.setCurrentPatient);
   const addBloodworkResult = useWorxStore((state) => state.addBloodworkResult);
 
-  // Initialize demo data on mount
   useEffect(() => {
-    if (!currentPatient) {
-      setCurrentPatient(MOCK_PATIENT);
-    }
-    if (bloodworkResults.length === 0) {
-      addBloodworkResult(MOCK_BLOODWORK);
-    }
+    if (!currentPatient) setCurrentPatient(MOCK_PATIENT);
+    if (bloodworkResults.length === 0) addBloodworkResult(MOCK_BLOODWORK);
   }, [currentPatient, bloodworkResults, setCurrentPatient, addBloodworkResult]);
 
-  // Get latest bloodwork result
-  const latestBloodwork = bloodworkResults[bloodworkResults.length - 1] || MOCK_BLOODWORK;
-  
-  // Group metrics by category
+  const latestBloodwork = bloodworkResults[bloodworkResults.length - 1] ?? MOCK_BLOODWORK;
   const groupedMetrics = groupMetricsByCategory(latestBloodwork.metrics);
-  
-  // Calculate summary statistics
   const stats = calculateSummaryStats(latestBloodwork.metrics);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-8"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="text-4xl font-bold text-white mb-2">
-                Patient Dashboard
-              </h1>
-              <p className="text-slate-400">
-                AI-powered blood analysis and health insights
-              </p>
-            </div>
-            <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30 px-4 py-2">
-              🤖 Demo Mode
+    <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-white transition-colors">
+      {/* Top nav */}
+      <header className="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-sm sticky top-0 z-20">
+        <div className="container mx-auto px-4 h-14 flex items-center justify-between max-w-7xl">
+          <div className="flex items-center gap-4">
+            <Link href="/">
+              <Button variant="ghost" size="sm" className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white gap-2 -ml-2">
+                <ArrowLeft className="w-4 h-4" />
+                Back
+              </Button>
+            </Link>
+            <Separator orientation="vertical" className="h-5 bg-slate-200 dark:bg-slate-700" />
+            <WorkxLogo size={20} withWordmark />
+          </div>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <Badge className="bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700 text-xs font-normal">
+              Demo Mode
             </Badge>
           </div>
+        </div>
+      </header>
+
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        {/* Page title */}
+        <motion.div
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="mb-6"
+        >
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Blood Analysis Report</h1>
+          <p className="text-slate-500 text-sm mt-1">AI-powered insights from your latest lab results</p>
         </motion.div>
 
         {/* Patient Info Card */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.5 }}
+          transition={{ delay: 0.08, duration: 0.4 }}
         >
-          <Card className="p-6 mb-8 bg-slate-900/50 border-purple-500/20 backdrop-blur-sm">
-            <div className="grid md:grid-cols-4 gap-6">
-              {/* Patient Name */}
-              <div className="flex items-center gap-3">
-                <div className="bg-purple-500/10 border border-purple-500/30 rounded-full p-3">
-                  <User className="w-5 h-5 text-purple-400" />
-                </div>
-                <div>
-                  <p className="text-sm text-slate-400">Patient</p>
-                  <p className="text-lg font-semibold text-white">
-                    {currentPatient?.firstName} {currentPatient?.lastName}
-                  </p>
-                </div>
-              </div>
-
-              {/* Test Date */}
-              <div className="flex items-center gap-3">
-                <div className="bg-blue-500/10 border border-blue-500/30 rounded-full p-3">
-                  <Calendar className="w-5 h-5 text-blue-400" />
-                </div>
-                <div>
-                  <p className="text-sm text-slate-400">Test Date</p>
-                  <p className="text-lg font-semibold text-white">
-                    {formatDate(latestBloodwork.testDate)}
-                  </p>
-                </div>
-              </div>
-
-              {/* Lab */}
-              <div className="flex items-center gap-3">
-                <div className="bg-green-500/10 border border-green-500/30 rounded-full p-3">
-                  <Activity className="w-5 h-5 text-green-400" />
-                </div>
-                <div>
-                  <p className="text-sm text-slate-400">Lab</p>
-                  <p className="text-lg font-semibold text-white">
-                    {latestBloodwork.labName || 'Unknown'}
-                  </p>
-                </div>
-              </div>
-
-              {/* Status Summary */}
-              <div className="flex items-center gap-3">
-                <div className="bg-orange-500/10 border border-orange-500/30 rounded-full p-3">
-                  <TrendingUp className="w-5 h-5 text-orange-400" />
-                </div>
-                <div>
-                  <p className="text-sm text-slate-400">Abnormal Results</p>
-                  <p className="text-lg font-semibold text-white">
-                    {stats.abnormal + stats.critical} of {stats.total}
-                  </p>
-                </div>
-              </div>
+          <Card className="p-5 mb-6 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-none">
+            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
+              <PatientInfoItem
+                icon={<User className="w-4 h-4 text-slate-400" />}
+                label="Patient"
+                value={`${currentPatient?.firstName ?? '—'} ${currentPatient?.lastName ?? ''}`}
+              />
+              <PatientInfoItem
+                icon={<Calendar className="w-4 h-4 text-slate-400" />}
+                label="Test Date"
+                value={formatDate(latestBloodwork.testDate)}
+              />
+              <PatientInfoItem
+                icon={<Activity className="w-4 h-4 text-slate-400" />}
+                label="Laboratory"
+                value={latestBloodwork.labName ?? 'Unknown'}
+              />
+              <PatientInfoItem
+                icon={<TrendingUp className="w-4 h-4 text-slate-400" />}
+                label="Abnormal Results"
+                value={`${stats.abnormal + stats.critical} of ${stats.total}`}
+              />
             </div>
           </Card>
         </motion.div>
 
         {/* Summary Stats */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="grid md:grid-cols-4 gap-4 mb-8"
+          transition={{ delay: 0.14, duration: 0.4 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8"
         >
-          <Card className="p-4 bg-green-500/5 border-green-500/20">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-slate-400 mb-1">Normal</p>
-                <p className="text-2xl font-bold text-green-400">{stats.normal}</p>
-              </div>
-              <div className="w-3 h-3 rounded-full bg-green-500" />
-            </div>
-          </Card>
-
-          <Card className="p-4 bg-orange-500/5 border-orange-500/20">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-slate-400 mb-1">Out of Range</p>
-                <p className="text-2xl font-bold text-orange-400">{stats.abnormal}</p>
-              </div>
-              <div className="w-3 h-3 rounded-full bg-orange-500" />
-            </div>
-          </Card>
-
-          <Card className="p-4 bg-red-500/5 border-red-500/20">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-slate-400 mb-1">Critical</p>
-                <p className="text-2xl font-bold text-red-400">{stats.critical}</p>
-              </div>
-              <div className="w-3 h-3 rounded-full bg-red-500" />
-            </div>
-          </Card>
-
-          <Card className="p-4 bg-purple-500/5 border-purple-500/20">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-slate-400 mb-1">Total Metrics</p>
-                <p className="text-2xl font-bold text-purple-400">{stats.total}</p>
-              </div>
-              <Activity className="w-5 h-5 text-purple-400" />
-            </div>
-          </Card>
+          <StatCard label="Normal" value={stats.normal} color="teal" />
+          <StatCard label="Out of Range" value={stats.abnormal} color="amber" />
+          <StatCard label="Critical" value={stats.critical} color="red" />
+          <StatCard label="Total Metrics" value={stats.total} color="slate" />
         </motion.div>
 
-        {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Left Column - Bloodwork Results */}
+        {/* Main content */}
+        <div className="grid lg:grid-cols-3 gap-6">
+          {/* Left — Bloodwork results */}
           <div className="lg:col-span-2 space-y-8">
             {Object.entries(groupedMetrics).map(([category, metrics], categoryIndex) => (
               <motion.div
                 key={category}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 + categoryIndex * 0.1, duration: 0.5 }}
+                transition={{ delay: 0.2 + categoryIndex * 0.08, duration: 0.4 }}
               >
-                {/* Category Header */}
                 <div className="flex items-center gap-3 mb-4">
-                  <h2 className="text-xl font-bold text-white">{category}</h2>
-                  <Separator className="flex-1 bg-slate-800" />
-                  <span className="text-sm text-slate-400">
+                  <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-200">{category}</h2>
+                  <Separator className="flex-1 bg-slate-200 dark:bg-slate-800" />
+                  <span className="text-xs text-slate-400">
                     {metrics.length} {metrics.length === 1 ? 'test' : 'tests'}
                   </span>
                 </div>
-
-                {/* Metrics Grid */}
-                <div className="grid gap-4">
+                <div className="grid gap-3">
                   {metrics.map((metric, index) => (
                     <MetricCard
                       key={metric.name}
@@ -219,28 +150,23 @@ export default function DashboardPage(): React.JSX.Element {
             ))}
           </div>
 
-          {/* Right Column - AI Insights */}
+          {/* Right — AI Insights */}
           <div className="lg:col-span-1">
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: 16 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4, duration: 0.5 }}
-              className="sticky top-8"
+              transition={{ delay: 0.3, duration: 0.4 }}
+              className="sticky top-20 space-y-4"
             >
               <AIInsightsPanel bloodwork={latestBloodwork} />
 
-              {/* Info Notice */}
-              <Card className="mt-4 p-4 bg-blue-500/5 border-blue-500/20">
+              <Card className="p-4 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-none">
                 <div className="flex gap-3">
-                  <AlertCircle className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
-                  <div className="text-sm text-slate-300">
-                    <p className="font-medium text-blue-300 mb-1">
-                      Demo Data Notice
-                    </p>
-                    <p className="text-slate-400">
-                      This dashboard uses mock patient data for demonstration purposes. 
-                      All values and insights are fictitious.
-                    </p>
+                  <AlertCircle className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
+                  <div className="text-xs text-slate-500 leading-relaxed">
+                    <span className="font-medium text-slate-600 dark:text-slate-400">Demo data only.</span>{" "}
+                    All values shown are synthetic and for demonstration purposes.
+                    This is not medical advice.
                   </div>
                 </div>
               </Card>
@@ -248,21 +174,73 @@ export default function DashboardPage(): React.JSX.Element {
           </div>
         </div>
 
-        {/* Footer Attribution */}
+        {/* Footer */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.5 }}
-          className="mt-16 text-center text-slate-500 text-sm"
+          transition={{ delay: 0.8 }}
+          className="mt-16 text-center text-xs text-slate-400"
         >
-          <p>
-            Built with Next.js 15, TypeScript, Zod, Zustand, and Framer Motion
-          </p>
-          <p className="mt-2">
-            AI Insights feature will be autonomously developed by Claude Code 4.6
-          </p>
+          Built with Next.js 15 · TypeScript · Zod · Zustand · Framer Motion
         </motion.div>
       </div>
     </div>
+  );
+}
+
+function PatientInfoItem({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-center gap-3">
+      <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
+        {icon}
+      </div>
+      <div>
+        <p className="text-xs text-slate-400 mb-0.5">{label}</p>
+        <p className="text-sm font-medium text-slate-800 dark:text-slate-200">{value}</p>
+      </div>
+    </div>
+  );
+}
+
+function StatCard({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: number;
+  color: "teal" | "amber" | "red" | "slate";
+}) {
+  const colorMap = {
+    teal: {
+      value: "text-teal-600 dark:text-teal-400",
+      card: "border-teal-200 dark:border-teal-900/50 bg-teal-50 dark:bg-teal-950/30",
+    },
+    amber: {
+      value: "text-amber-600 dark:text-amber-400",
+      card: "border-amber-200 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-950/20",
+    },
+    red: {
+      value: "text-red-600 dark:text-red-400",
+      card: "border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-950/20",
+    },
+    slate: {
+      value: "text-slate-700 dark:text-slate-300",
+      card: "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900",
+    },
+  };
+  return (
+    <Card className={`p-4 border shadow-none ${colorMap[color].card}`}>
+      <p className="text-xs text-slate-500 mb-1">{label}</p>
+      <p className={`text-2xl font-bold ${colorMap[color].value}`}>{value}</p>
+    </Card>
   );
 }

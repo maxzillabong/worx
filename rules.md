@@ -4,7 +4,7 @@
 
 ---
 
-## 🎯 Core Principles
+## Core Principles
 
 ### 1. Type Safety First
 - **No `any` types** unless interfacing with untyped external libraries
@@ -82,7 +82,7 @@ const formatted = new Date(date).toLocaleString(...);
 
 ---
 
-## 📁 File Organization
+## File Organization
 
 ```
 worx/
@@ -107,7 +107,7 @@ worx/
 
 ---
 
-## 💻 TypeScript Rules
+## TypeScript Rules
 
 ### Explicit Types
 ```typescript
@@ -157,7 +157,7 @@ export function MetricCard({ metric, index = 0 }) {
 
 ---
 
-## 🔐 Validation Rules
+## Validation Rules
 
 ### API Routes
 ```typescript
@@ -211,7 +211,7 @@ const schema = z.object({
 
 ---
 
-## 🏪 State Management Rules
+## State Management Rules
 
 ### Zustand Store Usage
 ```typescript
@@ -244,7 +244,7 @@ const { set, update } = useWorxStore.getState();
 
 ---
 
-## ⚠️ Error Handling Rules
+## Error Handling Rules
 
 ### Centralized Errors
 ```typescript
@@ -275,7 +275,7 @@ throw new Error('Invalid ID');
 
 ---
 
-## 🧪 Testing Rules
+## Testing Rules
 
 ### Test Location
 ```
@@ -329,7 +329,7 @@ it('works', () => {
 
 ---
 
-## 📝 Code Style
+## Code Style
 
 ### Naming Conventions
 ```typescript
@@ -377,7 +377,7 @@ import { useWorxStore } from '../lib/store';
 
 ---
 
-## 🎨 Component Patterns
+## Component Patterns
 
 ### Client vs Server Components
 ```typescript
@@ -417,7 +417,7 @@ export function MetricCard({ metric, index }: { metric: any, index: number }) {
 
 ---
 
-## ✅ Pre-Commit Checklist
+## Pre-Commit Checklist
 
 Before committing code:
 
@@ -434,7 +434,7 @@ Before committing code:
 
 ---
 
-## 🚫 Forbidden Patterns
+## Forbidden Patterns
 
 ### Never Do This
 ```typescript
@@ -463,7 +463,7 @@ it('test1', () => { });
 
 ---
 
-## 📚 Reference Implementations
+## Reference Implementations
 
 **Look at these files for examples:**
 

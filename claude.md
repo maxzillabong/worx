@@ -5,7 +5,7 @@
 
 ---
 
-## 📋 Essential Reading
+## Essential Reading
 
 Before doing anything, read these files in order:
 
@@ -13,7 +13,7 @@ Before doing anything, read these files in order:
 2. **`rules.md`** - Coding standards and architecture rules
 3. **`PROGRESS.md`** - Current status, completed tasks, next steps
 
-## 🎯 Current Mission
+## Current Mission
 
 **Phase 2: AI Insights Feature** (Autonomous Development Test)
 
@@ -33,7 +33,7 @@ Build the AI blood analysis feature as specified in PRD.md. This will test your 
 - Zustand state integration
 - Comprehensive tests
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 worx/
@@ -58,7 +58,7 @@ worx/
 └── vitest.config.ts    ← Test configuration
 ```
 
-## 🛠️ Tech Stack Quick Reference
+## Tech Stack Quick Reference
 
 - **Framework:** Next.js 15 (App Router)
 - **Language:** TypeScript (strict mode)
@@ -68,7 +68,7 @@ worx/
 - **Styling:** Tailwind CSS + Shadcn UI
 - **Animation:** Framer Motion
 
-## ✅ Quality Gates (Must Pass)
+## Quality Gates (Must Pass)
 
 Before considering a PR complete:
 
@@ -80,7 +80,7 @@ Before considering a PR complete:
 6. **Errors:** Centralized error handling
 7. **Security:** No secrets exposed, inputs sanitized
 
-## 💡 Key Architectural Principles
+## Key Architectural Principles
 
 ### 1. Validate at Boundaries
 ```typescript
@@ -107,7 +107,7 @@ type Patient = z.infer<typeof PatientSchema>;
 import { formatDate } from '@/lib/utils';
 ```
 
-## 🔐 Security Considerations
+## Security Considerations
 
 - Headers configured in `next.config.ts`
 - Input sanitization via Zod
@@ -115,7 +115,7 @@ import { formatDate } from '@/lib/utils';
 - No API keys in client bundles
 - Rate limiting (future)
 
-## 📝 Documentation Standards
+## Documentation Standards
 
 **Code Comments:**
 - Explain WHY, not WHAT
@@ -132,21 +132,21 @@ import { formatDate } from '@/lib/utils';
  */
 ```
 
-## 🧪 Testing Expectations
+## Testing Expectations
 
 - Every new feature needs tests
 - Test happy path + edge cases
 - Use descriptive test names
 - Follow existing test patterns in `lib/__tests__/`
 
-## 🚀 Deployment
+## Deployment
 
 - **Hosting:** Hetzner VPS (188.245.46.71)
 - **Domain:** worx.maxzilla.nl
 - **Reverse Proxy:** Caddy
 - **Docker:** Automated deployment
 
-## 📊 Blog Post Context
+## Blog Post Context
 
 This project will be featured in a blog post:
 
@@ -162,14 +162,14 @@ This project will be featured in a blog post:
 
 **Be thorough. The world will see this code.**
 
-## 🎨 Design Philosophy
+## Design Philosophy
 
 - **Clean:** Minimal, purposeful design
 - **Fast:** Smooth animations, instant feedback
 - **Professional:** Production-grade code quality
 - **Accessible:** Semantic HTML, ARIA labels (future)
 
-## ⚠️ Important Constraints
+## Important Constraints
 
 ### DO:
 - Follow rules.md strictly
@@ -185,7 +185,7 @@ This project will be featured in a blog post:
 - Bypass error handling
 - Commit without testing
 
-## 🔄 Workflow
+## Workflow
 
 1. Read PRD.md for feature requirements
 2. Check PROGRESS.md for current state
@@ -194,7 +194,7 @@ This project will be featured in a blog post:
 5. Update PROGRESS.md
 6. Commit with descriptive message
 
-## 📞 When Stuck
+## When Stuck
 
 **If requirements are ambiguous:**
 - Ask the user for clarification
